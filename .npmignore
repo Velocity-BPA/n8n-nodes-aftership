@@ -1,0 +1,40 @@
+# Source files (not needed in published package)
+credentials/
+nodes/
+
+# Test files
+test/
+*.test.ts
+*.spec.ts
+coverage/
+.nyc_output/
+jest.config.js
+
+# Development files
+.eslintrc.js
+.prettierrc
+tsconfig.json
+.editorconfig
+
+# Build scripts (development only)
+scripts/
+
+# IDE and OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Git files
+.git/
+.gitignore
+
+# Documentation that's not needed in package
+CONTRIBUTING.md
+CHANGELOG.md
+
+# Other development artifacts
+*.tsbuildinfo
+*.log
+tmp/
+temp/
