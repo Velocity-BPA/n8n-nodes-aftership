@@ -8,24 +8,25 @@
 >
 > For licensing information, visit https://velobpa.com/licensing or contact licensing@velobpa.com.
 
-A comprehensive n8n community node for AfterShip, the industry-leading shipment tracking API platform supporting 1,100+ carriers worldwide. This node provides complete integration with AfterShip's Tracking, Shipping, and Returns APIs.
+An n8n community node that integrates with AfterShip's shipment tracking platform. This node provides access to 5 core resources enabling comprehensive package tracking, courier management, checkpoint monitoring, notification handling, and webhook configuration for automated shipping workflows.
 
-![n8n](https://img.shields.io/badge/n8n-community--node-brightgreen)
-![AfterShip](https://img.shields.io/badge/AfterShip-API-orange)
+![n8n Community Node](https://img.shields.io/badge/n8n-Community%20Node-blue)
 ![License](https://img.shields.io/badge/license-BSL--1.1-blue)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.4-blue)
-![Node](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue)
+![Shipment Tracking](https://img.shields.io/badge/Shipment-Tracking-orange)
+![Logistics](https://img.shields.io/badge/Logistics-API-green)
+![E-commerce](https://img.shields.io/badge/E--commerce-Integration-purple)
 
 ## Features
 
-- **Shipment Tracking**: Track packages across 1,100+ carriers worldwide with normalized status updates
-- **Courier Management**: Access and auto-detect couriers for tracking numbers
-- **AI-Powered EDD**: Get estimated delivery dates using AfterShip's machine learning predictions
-- **Shipping Labels**: Create, manage, and cancel shipping labels with rate shopping
-- **Returns Management**: Handle customer return requests with automated label generation
-- **Order Management**: Sync and manage e-commerce orders
-- **Real-time Webhooks**: Receive instant notifications for tracking status changes
-- **Batch Operations**: Bulk create trackings and get estimated delivery dates
+- **Shipment Tracking** - Create, update, and monitor package deliveries across 1000+ couriers worldwide
+- **Courier Management** - Access comprehensive courier information and service capabilities
+- **Checkpoint Analysis** - Retrieve detailed delivery milestones and transit history
+- **Smart Notifications** - Configure and manage delivery status alerts for customers
+- **Webhook Integration** - Set up real-time tracking event notifications for automated workflows
+- **Global Coverage** - Support for international shipping with multi-language tracking
+- **Delivery Analytics** - Access performance metrics and delivery insights
+- **Custom Fields** - Add metadata and custom tracking parameters to shipments
 
 ## Installation
 
@@ -33,327 +34,156 @@ A comprehensive n8n community node for AfterShip, the industry-leading shipment 
 
 1. Open n8n
 2. Go to **Settings** → **Community Nodes**
-3. Click **Install**
+3. Click **Install a community node**
 4. Enter `n8n-nodes-aftership`
 5. Click **Install**
 
 ### Manual Installation
 
 ```bash
-# Navigate to your n8n installation directory
 cd ~/.n8n
-
-# Install the package
 npm install n8n-nodes-aftership
-
-# Restart n8n
 ```
 
 ### Development Installation
 
 ```bash
-# Clone or extract the repository
 git clone https://github.com/Velocity-BPA/n8n-nodes-aftership.git
 cd n8n-nodes-aftership
-
-# Install dependencies
 npm install
-
-# Build the project
 npm run build
-
-# Create symlink for n8n
 mkdir -p ~/.n8n/custom
 ln -s $(pwd) ~/.n8n/custom/n8n-nodes-aftership
-
-# Restart n8n
+n8n start
 ```
 
 ## Credentials Setup
 
-### AfterShip API Credentials
-
-| Field | Description | Default |
-|-------|-------------|---------|
-| **API Key** | Your AfterShip API key from the dashboard | Required |
-| **API Version** | API version to use | `2025-01` |
-| **Base URL** | AfterShip API base URL | `https://api.aftership.com` |
-
-To obtain your API key:
-1. Log in to [AfterShip](https://admin.aftership.com/)
-2. Go to **Settings** → **API Keys**
-3. Create or copy your API key
+| Field | Description | Required |
+|-------|-------------|----------|
+| API Key | Your AfterShip API key from dashboard settings | Yes |
+| API Environment | Production or Sandbox environment | Yes |
 
 ## Resources & Operations
 
-### Trackings
+### 1. Tracking
 
 | Operation | Description |
 |-----------|-------------|
-| **List** | List all trackings with filters |
-| **Get** | Get tracking by ID or slug/number |
-| **Create** | Create a new tracking |
-| **Update** | Update tracking information |
-| **Delete** | Delete a tracking |
-| **Retrack** | Retrack an expired tracking |
-| **Mark as Completed** | Mark tracking as complete |
-| **Get Last Checkpoint** | Get the latest checkpoint |
-| **Batch Create** | Create multiple trackings |
-| **Detect Courier** | Auto-detect courier for tracking number |
+| Create | Add a new shipment to track with tracking number and courier |
+| Get | Retrieve tracking information for a specific shipment |
+| Update | Modify shipment details, add custom fields, or update delivery info |
+| Delete | Remove a shipment from tracking |
+| List | Get all tracked shipments with optional filtering |
+| Get Last Checkpoint | Retrieve the most recent tracking event |
+| Retrack | Reactivate tracking for expired or inactive shipments |
 
-### Couriers
+### 2. Courier
 
 | Operation | Description |
 |-----------|-------------|
-| **List** | List activated couriers |
-| **List All** | List all 1,100+ supported couriers |
-| **Detect** | Detect possible couriers for tracking number |
-| **Get by Slug** | Get courier details by slug |
+| List All | Get complete list of supported courier services |
+| Get | Retrieve detailed information about a specific courier |
+| Detect | Automatically identify courier from tracking number format |
+| List User Couriers | Get couriers available to your account |
 
-### Estimated Delivery
-
-| Operation | Description |
-|-----------|-------------|
-| **Get** | Get EDD for a single tracking |
-| **Batch Get** | Get EDD for multiple trackings |
-
-### Notifications
+### 3. Checkpoint
 
 | Operation | Description |
 |-----------|-------------|
-| **Get Settings** | Get notification settings for tracking |
-| **Add Receiver** | Add email/SMS notification receiver |
-| **Remove Receiver** | Remove notification receiver |
+| Get | Retrieve all checkpoint events for a tracked shipment |
+| List | Get checkpoint history with filtering options |
 
-### Labels (Shipping API)
-
-| Operation | Description |
-|-----------|-------------|
-| **Create** | Create a shipping label |
-| **Get** | Get label by ID |
-| **Cancel** | Cancel/void a label |
-| **Get Rates** | Get shipping rates from carriers |
-| **Create Manifest** | Create carrier pickup manifest |
-| **Get Manifest** | Get manifest by ID |
-
-### Shipments
+### 4. Notification
 
 | Operation | Description |
 |-----------|-------------|
-| **Create** | Create a shipment |
-| **Get** | Get shipment by ID |
-| **List** | List shipments |
+| Create | Set up delivery notifications for customers |
+| Get | Retrieve notification settings for a shipment |
+| Update | Modify notification preferences and recipients |
+| Delete | Remove notification configuration |
+| List | Get all configured notifications |
 
-### Carriers
-
-| Operation | Description |
-|-----------|-------------|
-| **List** | List shipper accounts |
-| **Create** | Add new carrier account |
-| **Get** | Get shipper account details |
-| **Update** | Update shipper account |
-| **Delete** | Remove shipper account |
-
-### Returns
+### 5. Webhook
 
 | Operation | Description |
 |-----------|-------------|
-| **List** | List return requests |
-| **Get** | Get return by ID |
-| **Create** | Create return request |
-| **Update** | Update return request |
-| **Get Labels** | Get return labels |
-| **Create Label** | Generate return label |
-
-### Return Settings
-
-| Operation | Description |
-|-----------|-------------|
-| **Get Settings** | Get returns configuration |
-| **Update Settings** | Update returns configuration |
-| **List Reasons** | Get return reasons |
-| **Create Reason** | Add new return reason |
-
-### Orders
-
-| Operation | Description |
-|-----------|-------------|
-| **List** | List orders |
-| **Get** | Get order by ID |
-| **Create** | Create order |
-| **Update** | Update order |
-| **Delete** | Delete order |
-
-### Exports
-
-| Operation | Description |
-|-----------|-------------|
-| **Create** | Create data export |
-| **Get** | Get export status |
-| **Download** | Download export file |
-
-### Checkpoints
-
-| Operation | Description |
-|-----------|-------------|
-| **Get** | Get all checkpoints for a tracking |
-
-## Trigger Node
-
-The AfterShip Trigger node provides webhook-based triggers for real-time tracking updates.
-
-### Events
-
-| Event | Description |
-|-------|-------------|
-| **Tracking Update** | Any tracking status change |
-| **Out for Delivery** | Package is out for delivery |
-| **Delivered** | Package successfully delivered |
-| **Exception** | Delivery exception occurred |
-| **Expired** | Tracking has expired |
-| **Pending Pickup** | Package awaiting pickup |
-| **In Transit** | Package in transit update |
-| **Available for Pickup** | Ready for customer pickup |
-| **Return to Sender** | Package being returned |
-| **Failed Attempt** | Delivery attempt failed |
-
-### Webhook Security
-
-The trigger node supports HMAC-SHA256 signature verification for webhook security. Configure your webhook secret in AfterShip dashboard and the trigger node settings.
+| Create | Configure webhook endpoints for tracking events |
+| Get | Retrieve webhook configuration details |
+| Update | Modify webhook URL and event triggers |
+| Delete | Remove webhook configuration |
+| List | Get all configured webhooks |
+| Test | Send test webhook payload to verify endpoint |
 
 ## Usage Examples
 
-### Create and Track a Shipment
-
 ```javascript
-// 1. Create a tracking
+// Create a new shipment tracking
 {
-  "tracking_number": "1Z999AA10123456784",
+  "tracking_number": "1Z999AA1234567890",
   "slug": "ups",
-  "title": "Order #12345",
-  "customer_name": "John Doe",
-  "emails": ["john@example.com"],
-  "smses": ["+1234567890"]
+  "title": "iPhone Order #12345",
+  "customer_name": "John Smith",
+  "order_id": "ORD-12345",
+  "custom_fields": {
+    "product_name": "iPhone 14 Pro",
+    "order_value": "$999.00"
+  }
 }
-
-// 2. Get tracking updates
-// Use the tracking ID or slug + number to retrieve status
 ```
-
-### Batch Create Trackings
 
 ```javascript
-// Create multiple trackings at once
+// Set up delivery notifications
 {
-  "trackings": [
-    { "tracking_number": "1Z999AA10123456784", "slug": "ups" },
-    { "tracking_number": "9400111899223456789012", "slug": "usps" },
-    { "tracking_number": "794644790138", "slug": "fedex" }
-  ]
+  "tracking_id": "aftership_tracking_id",
+  "emails": ["customer@example.com", "support@store.com"],
+  "smses": ["+1234567890"],
+  "notification_preference": {
+    "email": ["Delivered", "Exception", "Delivered"],
+    "sms": ["Exception", "Delivered"]
+  }
 }
 ```
-
-### Generate Shipping Label
 
 ```javascript
-// Create a shipping label with rate shopping
+// Configure webhook for order management system
 {
-  "shipper_account_id": "your-account-id",
-  "ship_from": {
-    "name": "Sender Name",
-    "street1": "123 Main St",
-    "city": "New York",
-    "state": "NY",
-    "postal_code": "10001",
-    "country": "US"
-  },
-  "ship_to": {
-    "name": "Recipient Name",
-    "street1": "456 Oak Ave",
-    "city": "Los Angeles",
-    "state": "CA",
-    "postal_code": "90001",
-    "country": "US"
-  },
-  "parcels": [
-    {
-      "weight": { "value": 2.5, "unit": "lb" },
-      "dimension": { "length": 10, "width": 8, "height": 6, "unit": "in" }
-    }
-  ]
+  "url": "https://yourstore.com/api/webhooks/aftership",
+  "events": ["tracking.delivered", "tracking.exception", "tracking.expired"],
+  "secret": "your_webhook_secret_key"
 }
 ```
 
-## AfterShip Concepts
-
-| Concept | Description |
-|---------|-------------|
-| **Tracking Number** | Carrier-assigned package identifier |
-| **Slug** | Carrier identifier (e.g., `fedex`, `ups`, `dhl`) |
-| **Checkpoint** | Individual tracking event with timestamp and location |
-| **Tag** | Normalized delivery status (Delivered, InTransit, etc.) |
-| **Subtag** | Detailed status code for granular tracking |
-| **EDD** | Estimated Delivery Date from AI predictions |
-| **Courier Connection ID** | ID for multi-account carrier setups |
-
-## Delivery Statuses
-
-| Status | Description |
-|--------|-------------|
-| **Pending** | Tracking created, awaiting carrier update |
-| **InfoReceived** | Carrier has received shipment info |
-| **InTransit** | Package is in transit |
-| **OutForDelivery** | Package is out for delivery |
-| **AttemptFail** | Delivery attempt was unsuccessful |
-| **Delivered** | Package successfully delivered |
-| **AvailableForPickup** | Package ready for customer pickup |
-| **Exception** | Delivery exception occurred |
-| **Expired** | Tracking has expired (no updates for 30+ days) |
+```javascript
+// Query shipments with filters
+{
+  "slug": "fedex",
+  "delivery_time": "2024-01-15,2024-01-31",
+  "status": "Delivered",
+  "fields": "tracking_number,tag,checkpoints",
+  "limit": 50
+}
+```
 
 ## Error Handling
 
-The node provides detailed error messages for common scenarios:
-
-| Error Code | Description |
-|------------|-------------|
-| **4001** | Invalid API key |
-| **4003** | Tracking not found |
-| **4004** | Tracking already exists |
-| **4005** | Invalid tracking number format |
-| **4006** | Courier not detected |
-| **4015** | Invalid field value |
-| **4021** | Rate limit exceeded |
-
-## Security Best Practices
-
-1. **API Key Security**: Store API keys in n8n credentials, never hardcode
-2. **Webhook Verification**: Always enable HMAC signature verification for triggers
-3. **Access Control**: Use appropriate n8n user permissions
-4. **Data Privacy**: Be mindful of customer PII in tracking data
+| Error | Description | Solution |
+|-------|-------------|----------|
+| 401 Unauthorized | Invalid or missing API key | Verify API key in credentials configuration |
+| 4001 Tracking Already Exists | Attempting to create duplicate tracking | Use update operation or check existing trackings first |
+| 4004 Tracking Not Found | Shipment doesn't exist in system | Verify tracking number and courier selection |
+| 4010 Invalid Tracking Number | Malformed or invalid tracking format | Validate tracking number format for selected courier |
+| 4020 Courier Not Supported | Selected courier not available | Use courier detection or check supported courier list |
+| 429 Rate Limited | API rate limit exceeded | Implement delays between requests or upgrade plan |
 
 ## Development
 
 ```bash
-# Install dependencies
 npm install
-
-# Build
 npm run build
-
-# Run tests
 npm test
-
-# Run tests with coverage
-npm run test:coverage
-
-# Lint
 npm run lint
-
-# Fix lint issues
-npm run lint:fix
-
-# Format code
-npm run format
+npm run dev
 ```
 
 ## Author
@@ -370,30 +200,24 @@ This n8n community node is licensed under the **Business Source License 1.1**.
 Permitted for personal, educational, research, and internal business use.
 
 ### Commercial Use
-Use of this node within any SaaS, PaaS, hosted platform, managed service,
-or paid automation offering requires a commercial license.
+Use of this node within any SaaS, PaaS, hosted platform, managed service, or paid automation offering requires a commercial license.
 
-For licensing inquiries:
-**licensing@velobpa.com**
+For licensing inquiries: **licensing@velobpa.com**
 
 See [LICENSE](LICENSE), [COMMERCIAL_LICENSE.md](COMMERCIAL_LICENSE.md), and [LICENSING_FAQ.md](LICENSING_FAQ.md) for details.
 
 ## Contributing
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+Contributions are welcome! Please ensure:
+
+1. Code follows existing style conventions
+2. All tests pass (`npm test`)
+3. Linting passes (`npm run lint`)
+4. Documentation is updated for new features
+5. Commit messages are descriptive
 
 ## Support
 
-- **Documentation**: [AfterShip API Docs](https://www.aftership.com/docs/tracking/overview)
 - **Issues**: [GitHub Issues](https://github.com/Velocity-BPA/n8n-nodes-aftership/issues)
-- **n8n Community**: [n8n Community Forum](https://community.n8n.io/)
-
-## Acknowledgments
-
-- [AfterShip](https://www.aftership.com/) for their comprehensive tracking API
-- [n8n](https://n8n.io/) for the workflow automation platform
-- The n8n community for their contributions and feedback
+- **AfterShip API Documentation**: [docs.aftership.com](https://docs.aftership.com)
+- **AfterShip Developer Community**: [community.aftership.com](https://community.aftership.com)
