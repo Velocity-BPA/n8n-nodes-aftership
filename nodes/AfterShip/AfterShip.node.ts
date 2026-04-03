@@ -31,6 +31,7 @@ import * as returnSettings from './actions/returnSettings/returnSettings';
 import * as orders from './actions/orders/orders';
 import * as dataExports from './actions/exports/exports';
 import * as checkpoints from './actions/checkpoints/checkpoints';
+import * as webhooks from './actions/webhooks/webhooks';
 
 // Emit licensing notice once on load
 const LICENSING_NOTICE = `[Velocity BPA Licensing Notice]
@@ -133,6 +134,11 @@ export class AfterShip implements INodeType {
 						name: 'Checkpoint',
 						value: 'checkpoints',
 						description: 'Get tracking checkpoints',
+					},
+					{
+						name: 'Webhook',
+						value: 'webhooks',
+						description: 'Manage webhook endpoints',
 					},
 				],
 				default: 'trackings',
@@ -646,6 +652,52 @@ export class AfterShip implements INodeType {
 					},
 				],
 				default: 'get',
+			},
+
+			// ==================== WEBHOOKS OPERATIONS ====================
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				displayOptions: {
+					show: {
+						resource: ['webhooks'],
+					},
+				},
+				options: [
+					{
+						name: 'Create',
+						value: 'create',
+						description: 'Create a new webhook endpoint',
+						action: 'Create webhook',
+					},
+					{
+						name: 'List',
+						value: 'list',
+						description: 'Get all configured webhooks',
+						action: 'List webhooks',
+					},
+					{
+						name: 'Get',
+						value: 'get',
+						description: 'Get webhook details by ID',
+						action: 'Get webhook',
+					},
+					{
+						name: 'Update',
+						value: 'update',
+						description: 'Update webhook configuration',
+						action: 'Update webhook',
+					},
+					{
+						name: 'Delete',
+						value: 'delete',
+						description: 'Delete a webhook',
+						action: 'Delete webhook',
+					},
+				],
+				default: 'create',
 			},
 
 			// ==================== COMMON FIELDS ====================
@@ -2281,672 +2333,4 @@ export class AfterShip implements INodeType {
 						options: [
 							{ name: '4x6', value: '4x6' },
 							{ name: '4x8', value: '4x8' },
-							{ name: 'A4', value: 'a4' },
-							{ name: 'Letter', value: 'letter' },
-						],
-						default: '4x6',
-					},
-				],
-			},
-
-			// ==================== RETURN SETTINGS SPECIFIC FIELDS ====================
-
-			// Update fields for return settings
-			{
-				displayName: 'Update Fields',
-				name: 'updateFields',
-				type: 'collection',
-				placeholder: 'Add Field',
-				default: {},
-				displayOptions: {
-					show: {
-						resource: ['returnSettings'],
-						operation: ['updateSettings'],
-					},
-				},
-				options: [
-					{
-						displayName: 'Return Window (Days)',
-						name: 'returnWindow',
-						type: 'number',
-						default: 30,
-					},
-					{
-						displayName: 'Auto Approve',
-						name: 'autoApprove',
-						type: 'boolean',
-						default: false,
-					},
-					{
-						displayName: 'Require Photos',
-						name: 'requirePhotos',
-						type: 'boolean',
-						default: false,
-					},
-					{
-						displayName: 'Require Reason',
-						name: 'requireReason',
-						type: 'boolean',
-						default: true,
-					},
-					{
-						displayName: 'Notification Email',
-						name: 'notificationEmail',
-						type: 'string',
-						default: '',
-					},
-				],
-			},
-
-			// Title for create return reason
-			{
-				displayName: 'Title',
-				name: 'title',
-				type: 'string',
-				default: '',
-				required: true,
-				displayOptions: {
-					show: {
-						resource: ['returnSettings'],
-						operation: ['createReason'],
-					},
-				},
-				description: 'Return reason title',
-			},
-
-			// Additional fields for create return reason
-			{
-				displayName: 'Additional Fields',
-				name: 'additionalFields',
-				type: 'collection',
-				placeholder: 'Add Field',
-				default: {},
-				displayOptions: {
-					show: {
-						resource: ['returnSettings'],
-						operation: ['createReason'],
-					},
-				},
-				options: [
-					{
-						displayName: 'Description',
-						name: 'description',
-						type: 'string',
-						default: '',
-					},
-					{
-						displayName: 'Require Photo',
-						name: 'requirePhoto',
-						type: 'boolean',
-						default: false,
-					},
-					{
-						displayName: 'Require Note',
-						name: 'requireNote',
-						type: 'boolean',
-						default: false,
-					},
-					{
-						displayName: 'Active',
-						name: 'active',
-						type: 'boolean',
-						default: true,
-					},
-				],
-			},
-
-			// ==================== ORDERS SPECIFIC FIELDS ====================
-
-			// Order ID
-			{
-				displayName: 'Order ID',
-				name: 'orderId',
-				type: 'string',
-				default: '',
-				required: true,
-				displayOptions: {
-					show: {
-						resource: ['orders'],
-						operation: ['get', 'create', 'update', 'delete'],
-					},
-				},
-			},
-
-			// Filters for list orders
-			{
-				displayName: 'Filters',
-				name: 'filters',
-				type: 'collection',
-				placeholder: 'Add Filter',
-				default: {},
-				displayOptions: {
-					show: {
-						resource: ['orders'],
-						operation: ['list'],
-					},
-				},
-				options: [
-					{
-						displayName: 'Status',
-						name: 'status',
-						type: 'string',
-						default: '',
-					},
-					{
-						displayName: 'Platform',
-						name: 'platform',
-						type: 'string',
-						default: '',
-					},
-					{
-						displayName: 'Keyword',
-						name: 'keyword',
-						type: 'string',
-						default: '',
-					},
-					{
-						displayName: 'Created After',
-						name: 'createdAtMin',
-						type: 'dateTime',
-						default: '',
-					},
-					{
-						displayName: 'Created Before',
-						name: 'createdAtMax',
-						type: 'dateTime',
-						default: '',
-					},
-				],
-			},
-
-			// Additional fields for create order
-			{
-				displayName: 'Additional Fields',
-				name: 'additionalFields',
-				type: 'collection',
-				placeholder: 'Add Field',
-				default: {},
-				displayOptions: {
-					show: {
-						resource: ['orders'],
-						operation: ['create'],
-					},
-				},
-				options: [
-					{
-						displayName: 'Order Number',
-						name: 'orderNumber',
-						type: 'string',
-						default: '',
-					},
-					{
-						displayName: 'Platform',
-						name: 'platform',
-						type: 'string',
-						default: '',
-					},
-					{
-						displayName: 'Status',
-						name: 'status',
-						type: 'string',
-						default: '',
-					},
-					{
-						displayName: 'Items (JSON)',
-						name: 'items',
-						type: 'json',
-						default: '[]',
-					},
-					{
-						displayName: 'Shipping Address (JSON)',
-						name: 'shippingAddress',
-						type: 'json',
-						default: '{}',
-					},
-					{
-						displayName: 'Billing Address (JSON)',
-						name: 'billingAddress',
-						type: 'json',
-						default: '{}',
-					},
-				],
-			},
-
-			// Update fields for orders
-			{
-				displayName: 'Update Fields',
-				name: 'updateFields',
-				type: 'collection',
-				placeholder: 'Add Field',
-				default: {},
-				displayOptions: {
-					show: {
-						resource: ['orders'],
-						operation: ['update'],
-					},
-				},
-				options: [
-					{
-						displayName: 'Order Number',
-						name: 'orderNumber',
-						type: 'string',
-						default: '',
-					},
-					{
-						displayName: 'Platform',
-						name: 'platform',
-						type: 'string',
-						default: '',
-					},
-					{
-						displayName: 'Status',
-						name: 'status',
-						type: 'string',
-						default: '',
-					},
-					{
-						displayName: 'Items (JSON)',
-						name: 'items',
-						type: 'json',
-						default: '[]',
-					},
-					{
-						displayName: 'Shipping Address (JSON)',
-						name: 'shippingAddress',
-						type: 'json',
-						default: '{}',
-					},
-					{
-						displayName: 'Billing Address (JSON)',
-						name: 'billingAddress',
-						type: 'json',
-						default: '{}',
-					},
-				],
-			},
-
-			// ==================== EXPORTS SPECIFIC FIELDS ====================
-
-			// Export Type
-			{
-				displayName: 'Export Type',
-				name: 'exportType',
-				type: 'options',
-				options: [
-					{
-						name: 'Trackings',
-						value: 'trackings',
-					},
-					{
-						name: 'Returns',
-						value: 'returns',
-					},
-					{
-						name: 'Orders',
-						value: 'orders',
-					},
-				],
-				default: 'trackings',
-				required: true,
-				displayOptions: {
-					show: {
-						resource: ['exports'],
-						operation: ['create'],
-					},
-				},
-			},
-
-			// Export ID
-			{
-				displayName: 'Export ID',
-				name: 'exportId',
-				type: 'string',
-				default: '',
-				required: true,
-				displayOptions: {
-					show: {
-						resource: ['exports'],
-						operation: ['get', 'download'],
-					},
-				},
-			},
-
-			// Additional fields for create export
-			{
-				displayName: 'Additional Fields',
-				name: 'additionalFields',
-				type: 'collection',
-				placeholder: 'Add Field',
-				default: {},
-				displayOptions: {
-					show: {
-						resource: ['exports'],
-						operation: ['create'],
-					},
-				},
-				options: [
-					{
-						displayName: 'Format',
-						name: 'format',
-						type: 'options',
-						options: [
-							{ name: 'CSV', value: 'csv' },
-							{ name: 'Excel', value: 'xlsx' },
-						],
-						default: 'csv',
-					},
-					{
-						displayName: 'Created After',
-						name: 'createdAtMin',
-						type: 'dateTime',
-						default: '',
-					},
-					{
-						displayName: 'Created Before',
-						name: 'createdAtMax',
-						type: 'dateTime',
-						default: '',
-					},
-					{
-						displayName: 'Courier Slug',
-						name: 'slug',
-						type: 'string',
-						default: '',
-					},
-					{
-						displayName: 'Tag (Status)',
-						name: 'tag',
-						type: 'options',
-						options: DELIVERY_STATUSES.map((s) => ({
-							name: s.name,
-							value: s.value,
-						})),
-						default: '',
-					},
-					{
-						displayName: 'Fields',
-						name: 'fields',
-						type: 'string',
-						default: '',
-						description: 'Comma-separated list of fields to export',
-					},
-				],
-			},
-		],
-	};
-
-	methods = {
-		loadOptions: {
-			async getCouriers(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
-				try {
-					const response = await afterShipApiRequest.call(this, 'GET', '/couriers/all');
-					const data = response.data as IDataObject;
-					const couriersList = (data.couriers as IDataObject[]) || [];
-
-					return couriersList.map((courier) => ({
-						name: courier.name as string,
-						value: courier.slug as string,
-					}));
-				} catch {
-					// Fallback to popular couriers if API call fails
-					return POPULAR_COURIERS.map((c) => ({
-						name: c.name,
-						value: c.value,
-					}));
-				}
-			},
-		},
-	};
-
-	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
-		const items = this.getInputData();
-		const returnData: INodeExecutionData[] = [];
-
-		const resource = this.getNodeParameter('resource', 0) as string;
-		const operation = this.getNodeParameter('operation', 0) as string;
-
-		for (let i = 0; i < items.length; i++) {
-			try {
-				let result: INodeExecutionData[] = [];
-
-				switch (resource) {
-					case 'trackings':
-						switch (operation) {
-							case 'list':
-								result = await trackings.listTrackings.call(this, i);
-								break;
-							case 'get':
-								result = await trackings.getTracking.call(this, i);
-								break;
-							case 'create':
-								result = await trackings.createTracking.call(this, i);
-								break;
-							case 'update':
-								result = await trackings.updateTracking.call(this, i);
-								break;
-							case 'delete':
-								result = await trackings.deleteTracking.call(this, i);
-								break;
-							case 'retrack':
-								result = await trackings.retrackTracking.call(this, i);
-								break;
-							case 'markAsCompleted':
-								result = await trackings.markAsCompleted.call(this, i);
-								break;
-							case 'getLastCheckpoint':
-								result = await trackings.getLastCheckpoint.call(this, i);
-								break;
-							case 'batchCreate':
-								result = await trackings.batchCreateTrackings.call(this, i);
-								break;
-							case 'getBySlug':
-								result = await trackings.getTrackingBySlug.call(this, i);
-								break;
-							case 'detectCourier':
-								result = await trackings.detectCourier.call(this, i);
-								break;
-						}
-						break;
-
-					case 'couriers':
-						switch (operation) {
-							case 'list':
-								result = await couriers.listCouriers.call(this, i);
-								break;
-							case 'listAll':
-								result = await couriers.listAllCouriers.call(this, i);
-								break;
-							case 'detect':
-								result = await couriers.detectCouriers.call(this, i);
-								break;
-							case 'getBySlug':
-								result = await couriers.getCourierBySlug.call(this, i);
-								break;
-						}
-						break;
-
-					case 'estimatedDelivery':
-						switch (operation) {
-							case 'get':
-								result = await estimatedDelivery.getEstimatedDelivery.call(this, i);
-								break;
-							case 'batchGet':
-								result = await estimatedDelivery.batchGetEstimatedDelivery.call(this, i);
-								break;
-						}
-						break;
-
-					case 'notifications':
-						switch (operation) {
-							case 'getSettings':
-								result = await notifications.getNotificationSettings.call(this, i);
-								break;
-							case 'addReceiver':
-								result = await notifications.addNotificationReceiver.call(this, i);
-								break;
-							case 'removeReceiver':
-								result = await notifications.removeNotificationReceiver.call(this, i);
-								break;
-						}
-						break;
-
-					case 'labels':
-						switch (operation) {
-							case 'create':
-								result = await labels.createLabel.call(this, i);
-								break;
-							case 'get':
-								result = await labels.getLabel.call(this, i);
-								break;
-							case 'cancel':
-								result = await labels.cancelLabel.call(this, i);
-								break;
-							case 'getRates':
-								result = await labels.getRates.call(this, i);
-								break;
-							case 'createManifest':
-								result = await labels.createManifest.call(this, i);
-								break;
-							case 'getManifest':
-								result = await labels.getManifest.call(this, i);
-								break;
-						}
-						break;
-
-					case 'shipments':
-						switch (operation) {
-							case 'create':
-								result = await shipments.createShipment.call(this, i);
-								break;
-							case 'get':
-								result = await shipments.getShipment.call(this, i);
-								break;
-							case 'list':
-								result = await shipments.listShipments.call(this, i);
-								break;
-						}
-						break;
-
-					case 'carriers':
-						switch (operation) {
-							case 'list':
-								result = await carriers.listShipperAccounts.call(this, i);
-								break;
-							case 'create':
-								result = await carriers.createShipperAccount.call(this, i);
-								break;
-							case 'get':
-								result = await carriers.getShipperAccount.call(this, i);
-								break;
-							case 'update':
-								result = await carriers.updateShipperAccount.call(this, i);
-								break;
-							case 'delete':
-								result = await carriers.deleteShipperAccount.call(this, i);
-								break;
-						}
-						break;
-
-					case 'returns':
-						switch (operation) {
-							case 'list':
-								result = await returns.listReturns.call(this, i);
-								break;
-							case 'get':
-								result = await returns.getReturn.call(this, i);
-								break;
-							case 'create':
-								result = await returns.createReturn.call(this, i);
-								break;
-							case 'update':
-								result = await returns.updateReturn.call(this, i);
-								break;
-							case 'getLabels':
-								result = await returns.getReturnLabels.call(this, i);
-								break;
-							case 'createLabel':
-								result = await returns.createReturnLabel.call(this, i);
-								break;
-						}
-						break;
-
-					case 'returnSettings':
-						switch (operation) {
-							case 'getSettings':
-								result = await returnSettings.getReturnSettings.call(this, i);
-								break;
-							case 'updateSettings':
-								result = await returnSettings.updateReturnSettings.call(this, i);
-								break;
-							case 'listReasons':
-								result = await returnSettings.listReturnReasons.call(this, i);
-								break;
-							case 'createReason':
-								result = await returnSettings.createReturnReason.call(this, i);
-								break;
-						}
-						break;
-
-					case 'orders':
-						switch (operation) {
-							case 'list':
-								result = await orders.listOrders.call(this, i);
-								break;
-							case 'get':
-								result = await orders.getOrder.call(this, i);
-								break;
-							case 'create':
-								result = await orders.createOrder.call(this, i);
-								break;
-							case 'update':
-								result = await orders.updateOrder.call(this, i);
-								break;
-							case 'delete':
-								result = await orders.deleteOrder.call(this, i);
-								break;
-						}
-						break;
-
-					case 'exports':
-						switch (operation) {
-							case 'create':
-								result = await dataExports.createExport.call(this, i);
-								break;
-							case 'get':
-								result = await dataExports.getExport.call(this, i);
-								break;
-							case 'download':
-								result = await dataExports.downloadExport.call(this, i);
-								break;
-						}
-						break;
-
-					case 'checkpoints':
-						switch (operation) {
-							case 'get':
-								result = await checkpoints.getCheckpoints.call(this, i);
-								break;
-						}
-						break;
-				}
-
-				returnData.push(...result);
-			} catch (error) {
-				if (this.continueOnFail()) {
-					returnData.push({
-						json: {
-							error: (error as Error).message,
-						},
-						pairedItem: {
-							item: i,
-						},
-					});
-					continue;
-				}
-				throw error;
-			}
-		}
-
-		return [returnData];
-	}
-}
+							{
